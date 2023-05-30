@@ -8,16 +8,31 @@ public class GameManager : MonoBehaviour
     public List<GameObject> targets;
     private int score;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI gameOverText;
+    public bool isGameActive;
+    public GameObject titleScreen;
 
     void Start()
     {
-        score = 0;
-        scoreText.text = "Score:" + score;
+        
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void UpdateScore (int scoreToAdd)
+    {
+        score += scoreToAdd;
+        scoreText.text = "Score:" + score;
+    }
+
+    public void StartGame()
+    {
+        isGameActive = true;
+        score = 0;
+        UpdateScore(0);
+        titleScreen.gameObject.SetActive(false);
     }
 }

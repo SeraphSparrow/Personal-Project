@@ -11,12 +11,13 @@ public class PlayerController : MonoBehaviour
     public float zRange = 205;
     public float mvtForce;
     public float maxVelSqr;
-    
     public Rigidbody playerRb;
+    public ParticleSystem explosionParticle;
+    public GameManager gameManager;
 
     void Start()
     {
-        
+       gameManager = FindObjectOfType<GameManager>();
     }
 
     void Update()
@@ -25,24 +26,16 @@ public class PlayerController : MonoBehaviour
         forwardInput = Input.GetAxis("Vertical");
 
         //move forward
-        if(playerRb.velocity.sqrMagnitude < maxVelSqr)
+        if(playerRb.velocity.sqrMagnitude < maxVelSqr && gameManager.isGameActive)
         {
             playerRb.AddRelativeForce(Vector3.forward * Time.deltaTime * forwardInput * mvtForce);
         }
 
         //turn around 
-        transform.Rotate(Vector3.up, turnSpeed * horizontalInput * Time.deltaTime);
-
-        /*
-        if (transform.position.x < -xRange)
-            {transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);}
-        if (transform.position.x > xRange)
-            {transform.position = new Vector3(xRange, transform.position.y, transform.position.z);}
-        if (transform.position.z < -zRange)
-            {transform.position = new Vector3(transform.position.x, transform.position.y, -zRange);}
-        if (transform.position.z > zRange)
-            {transform.position = new Vector3(transform.position.x, transform.position.y, zRange);}
-        */
+        if(gameManager.isGameActive)
+        {
+            transform.Rotate(Vector3.up, turnSpeed * horizontalInput * Time.deltaTime);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -50,7 +43,10 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Food"))
         {
             Destroy(other.gameObject);
+            Instantiate(explosionParticle, other.transform.position,
+                explosionParticle.transform.rotation);
             FindObjectOfType<SpawnManager>().SpawnRandomFood();
+            gameManager.UpdateScore(5);
         }
     }
 
