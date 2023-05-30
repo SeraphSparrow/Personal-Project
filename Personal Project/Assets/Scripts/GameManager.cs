@@ -7,10 +7,12 @@ public class GameManager : MonoBehaviour
 {
     public List<GameObject> targets;
     private int score;
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI gameOverText;
     public bool isGameActive;
     public GameObject titleScreen;
+    public GameObject restartScreen;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI gameOverText;
+    
 
     void Start()
     {
