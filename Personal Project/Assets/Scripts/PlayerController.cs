@@ -11,15 +11,20 @@ public class PlayerController : MonoBehaviour
     public float zRange = 205;
     public float mvtForce;
     public float maxVelSqr;
-    public Rigidbody playerRb;
-    public ParticleSystem explosionParticle;
+    
     public GameManager gameManager;
+    public Rigidbody playerRb;
+    private AudioSource playerAudio;
+    public AudioClip collectSound;
+    public ParticleSystem explosionParticle;
 
     void Start()
     {
        gameManager = FindObjectOfType<GameManager>();
+       playerAudio = GetComponent<AudioSource>();
     }
 
+// Movement
     void Update()
     {
         horizontalInput = Input.GetAxis("Horizontal");
@@ -38,15 +43,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+// Collide with food + Destroy + Sparkly 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Food"))
         {
             Destroy(other.gameObject);
-            Instantiate(explosionParticle, other.transform.position,
-                explosionParticle.transform.rotation);
+            Instantiate(explosionParticle, other.transform.position, explosionParticle.transform.rotation);
             FindObjectOfType<SpawnManager>().SpawnRandomFood();
             gameManager.UpdateScore(5);
+            playerAudio.PlayOneShot(collectSound, 1.0f);
         }
     }
 
